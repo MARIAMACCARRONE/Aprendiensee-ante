@@ -6,6 +6,7 @@ import openai
 import speech_recognition as sr
 import random
 import fitz  # PyMuPDF
+from tooltip import Tooltip
 
 # Configura tu clave de API de OpenAI
 openai.api_key = 'TU_CLAVE_API_REAL'
@@ -38,25 +39,26 @@ class LeeFacil:
         toolbar.pack(side="top", fill="x")
 
         botones = [
-            ("Cargar Archivo", self.cargar_archivo),
-            ("Pegar Texto", self.pegar_texto),
-            ("Guardar Texto", self.guardar_texto),
-            ("Iniciar Lectura", self.iniciar_lectura),
-            ("Detener Lectura", self.detener_lectura),
-            ("Cambiar Fuente", self.cambiar_fuente),
-            ("Cambiar Color", self.cambiar_color),
-            ("Velocidad Lectura", self.cambiar_velocidad),
-            ("Preguntar Texto", self.preguntar_texto),
-            ("Generar Preguntas", self.generar_preguntas),
-            ("Simplificar Texto", self.simplificar_texto),
-            ("🎙 Transcribir Audio", self.transcribir_audio)
+            ("Cargar Archivo", self.cargar_archivo, "Cargar un archivo de texto o PDF"),
+            ("Pegar Texto", self.pegar_texto, "Pegar texto desde el portapapeles"),
+            ("Guardar Texto", self.guardar_texto, "Guardar el texto en un archivo"),
+            ("Iniciar Lectura", self.iniciar_lectura, "Iniciar la lectura en voz alta del texto"),
+            ("Detener Lectura", self.detener_lectura, "Detener la lectura en voz alta"),
+            ("Cambiar Fuente", self.cambiar_fuente, "Cambiar la fuente del texto"),
+            ("Cambiar Color", self.cambiar_color, "Cambiar el color del texto"),
+            ("Velocidad Lectura", self.cambiar_velocidad, "Cambiar la velocidad de lectura"),
+            ("Preguntar Texto", self.preguntar_texto, "Hacer preguntas sobre el texto"),
+            ("Generar Preguntas", self.generar_preguntas, "Generar preguntas de comprensión sobre el texto"),
+            ("Simplificar Texto", self.simplificar_texto, "Simplificar el texto utilizando la API de OpenAI"),
+            ("🎙 Transcribir Audio", self.transcribir_audio, "Transcribir audio a texto utilizando Google Speech Recognition")
         ]
 
-        # Asignar colores pastel a cada botón
-        for texto, comando in botones:
+        # Asignar colores pastel a cada botón y agregar tooltips
+        for texto, comando, tooltip_text in botones:
             color = self.generar_color_pastel()
             btn = tk.Button(toolbar, text=texto, command=comando, bg=color)
             btn.pack(side="left", padx=5, pady=5)
+            Tooltip(btn, tooltip_text)
 
     def generar_color_pastel(self):
         r = random.randint(200, 255)
@@ -96,7 +98,7 @@ class LeeFacil:
         archivo = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Archivos de texto", "*.txt")])
         if archivo:
             try:
-                with open(archivo, "w", encoding="utf-8") as f):
+                with open(archivo, "w", encoding="utf-8") as f:
                     f.write(self.text_area.get(1.0, tk.END).strip())
                 messagebox.showinfo("Guardar Texto", "Archivo guardado exitosamente.")
             except Exception as e:
